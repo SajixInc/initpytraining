@@ -9,7 +9,7 @@ class SignUpSerializers(serializers.ModelSerializer):
     """
     class Meta:
         model = LoginSignUp
-        fields = ['id', 'Firstname', 'LastName', 'UserName', 'Password', 'Email', 'MobileNumber']
+        fields = ['id', 'Firstname', 'LastName', 'UserName', 'Password', 'Email', 'MobileNumber''profile_picture']
         extra_kwargs = {
             'UserName': {'required': False},  # Optional for partial updates
             'Password': {'required': False},  # Optional for partial updates

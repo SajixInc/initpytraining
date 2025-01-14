@@ -6,7 +6,7 @@ class LoginSignUp(models.Model):
     Password = models.CharField(max_length=100)  # For production, use hashed passwords
     Email = models.EmailField(unique=True)  # Unique email
     MobileNumber = models.CharField(max_length=15, blank=True, null=True)  # Optional field
-
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     objects = models.Manager()
 
     class Meta:
