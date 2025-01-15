@@ -1,55 +1,67 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from .models import LoginSignUp
-from django.contrib.auth.hashers import make_password
 
 
 class SignUpSerializers(serializers.ModelSerializer):
     """
     Serializer for creating and updating user records.
     """
+    UserName = serializers.CharField(
+        required=True,
+        label="Username",
+        help_text="(Mandatory and must be unique)",
+        validators=[UniqueValidator(queryset=LoginSignUp.objects.all(), message="This username is already in use.")]
+    )
+    Email = serializers.EmailField(
+        required=True,
+        label="Email Address",
+        help_text="(Mandatory and must be unique)",
+        validators=[UniqueValidator(queryset=LoginSignUp.objects.all(), message="This email is already in use.")]
+    )
+    Password = serializers.CharField(
+        required=True,
+        write_only=True,
+        label="Password",
+        help_text="(Mandatory)"
+    )
+    profile_picture = serializers.ImageField(
+        required=False,
+        label="Profile Picture",
+        help_text="(Optional)"
+    )
+
     class Meta:
         model = LoginSignUp
-        fields = ['id', 'Firstname', 'LastName', 'UserName', 'Password', 'Email', 'MobileNumber''profile_picture']
+        fields = ['id', 'Firstname', 'LastName', 'UserName', 'Password', 'Email', 'MobileNumber', 'profile_picture']
         extra_kwargs = {
-            'UserName': {'required': False},  # Optional for partial updates
-            'Password': {'required': False},  # Optional for partial updates
-            'Email': {'required': False},  # Optional for partial updates
-            'Firstname': {'required': False},  # Optional for partial updates
-            'LastName': {'required': False},  # Optional for partial updates
-            'MobileNumber': {'required': False},  # Optional for partial updates
+            'Firstname': {'required': True, 'label': 'First Name', 'help_text': '(Mandatory)'},
+            'LastName': {'required': True, 'label': 'Last Name', 'help_text': '(Mandatory)'},
+            'MobileNumber': {'required': True, 'label': 'Mobile Number', 'help_text': '(Mandatory)'},
         }
 
     def validate(self, data):
         """
-        Validate fields to ensure no duplicates for UserName and Email during updates.
+        Validate required fields and uniqueness.
         """
-        # For updates, exclude the current instance from duplicate checks
-        if self.instance:
-            if 'UserName' in data and LoginSignUp.objects.filter(UserName=data['UserName']).exclude(id=self.instance.id).exists():
-                raise serializers.ValidationError({"UserName": "This username is already in use."})
-            if 'Email' in data and LoginSignUp.objects.filter(Email=data['Email']).exclude(id=self.instance.id).exists():
-                raise serializers.ValidationError({"Email": "This email is already in use."})
-        else:  # For new records, check uniqueness directly
-            if 'UserName' in data and LoginSignUp.objects.filter(UserName=data['UserName']).exists():
-                raise serializers.ValidationError({"UserName": "This username is already in use."})
-            if 'Email' in data and LoginSignUp.objects.filter(Email=data['Email']).exists():
-                raise serializers.ValidationError({"Email": "This email is already in use."})
+        if not self.instance:  # For new user creation
+            required_fields = ['Firstname', 'LastName', 'UserName', 'Email', 'MobileNumber', 'Password']
+            for field in required_fields:
+                if field not in data or not data[field]:
+                    raise serializers.ValidationError({field: f"{field} is required."})
+
         return data
 
     def create(self, validated_data):
         """
-        Custom create method to handle password hashing.
+        Custom create method.
         """
-        if 'Password' in validated_data:
-            validated_data['Password'] = make_password(validated_data['Password'])
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
         """
-        Custom update method to handle partial updates and password hashing.
+        Custom update method.
         """
-        if 'Password' in validated_data:
-            validated_data['Password'] = make_password(validated_data['Password'])
         return super().update(instance, validated_data)
 
 
@@ -59,4 +71,4 @@ class GetSignUpSerializers(serializers.ModelSerializer):
     """
     class Meta:
         model = LoginSignUp
-        fields = ['id', 'Firstname', 'LastName', 'UserName', 'Email', 'MobileNumber']
+        fields = ['id', 'Firstname', 'LastName', 'UserName', 'Email', 'MobileNumber', 'profile_picture']
