@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from .models import LoginSignUp
+from users.models import LoginSignUp
 
 
 class SignUpSerializers(serializers.ModelSerializer):

@@ -17,10 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('appointments/', include('appointment_management.urls')),  # Include URLs for appointments
     path('user/', include('users.urls')),  # Include URLs for users
+    path('search/', include('search.urls')),
+    
+
+    
+
 ]
 
 

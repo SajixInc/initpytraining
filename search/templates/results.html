@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if matches %}
+        <h2>Matched Apps:</h2>
+        <ul>
+            {% for app in matches %}
+                <li><a href="/{{ app }}/">{{ app|title }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No matches found. Try searching again.</p>
+    {% endif %}
+
+    <a href="{% url 'search_apps' %}">Back to Search</a>
+</body>
+</html>

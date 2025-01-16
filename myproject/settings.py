@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'appointment_management',
+    'search',
+    
     
 ]
 
@@ -57,10 +59,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'myproject.urls'
 
+import os
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Add this line if not already present
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,6 +76,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
@@ -90,12 +95,9 @@ DATABASES = {
     }
 }
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',  # Session-based auth
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',  # Allow any user to access APIs
-    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # No authentication required globally
+    ],
 }
 
 

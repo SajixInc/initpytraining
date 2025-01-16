@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Apps</title>
+</head>
+<body>
+    <h1>Search Installed Apps</h1>
+    <form method="get" action="{% url 'search_apps' %}">
+        <input type="text" name="query" placeholder="Enter app name" required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <h2>Available Apps:</h2>
+    <ul>
+        {% for app in available_apps %}
+            <li><a href="/{{ app }}/">{{ app|title }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
