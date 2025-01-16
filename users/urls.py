@@ -15,4 +15,3 @@ urlpatterns = [
     # Route for deleting a user by ID
     path('delete-user/<int:id>/', DeleteUserView.as_view(), name='delete-user'),
 ]
-

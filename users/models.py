@@ -1,16 +1,18 @@
 from django.db import models
+
 class LoginSignUp(models.Model):
-    Firstname = models.CharField(max_length=100)
-    LastName = models.CharField(max_length=100)
-    UserName = models.CharField(max_length=100, unique=True)  # Unique username
-    Password = models.CharField(max_length=100)  # For production, use hashed passwords
-    Email = models.EmailField(unique=True)  # Unique email
-    MobileNumber = models.CharField(max_length=15, blank=True, null=True)  # Optional field
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    Firstname = models.CharField(max_length=100, null=False, blank=False)  # Mandatory
+    LastName = models.CharField(max_length=100, null=False, blank=False)  # Mandatory
+    UserName = models.CharField(max_length=100, unique=True, null=False, blank=False)  # Mandatory and Unique
+    Password = models.CharField(max_length=100, null=False, blank=False)  # Mandatory
+    Email = models.EmailField(unique=True, null=False, blank=False)  # Mandatory and Unique
+    MobileNumber = models.CharField(max_length=15, null=False, blank=False)  # Mandatory
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)  # Optional
+
     objects = models.Manager()
 
     class Meta:
         db_table = "SignUp_Data"
 
     def __str__(self):
-        return self.UserName
+        return f"{self.Firstname} {self.LastName}"
