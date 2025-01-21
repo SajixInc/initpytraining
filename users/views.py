@@ -2,6 +2,14 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from users.serializers import SignUpSerializers, GetSignUpSerializers
 from users.models import LoginSignUp
+from rest_framework import filters
+from django.db.models import Q
+from .filters import UserFilter
+import logging
+from django.shortcuts import render
+from django.template.loader import get_template
+from django.core.paginator import Paginator
+from django.http import HttpResponseBadRequest
 import traceback
 
 
@@ -145,3 +153,38 @@ class DeleteUserView(generics.GenericAPIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+ 
+
+
+
+from django.db.models import Q
+from django.shortcuts import render
+from .models import LoginSignUp
+
+def search_users(request):
+    query = request.GET.get('q', '').strip()  # Get the search query
+    user_list = LoginSignUp.objects.none()  # Default to no results
+    user_count = 0  # Default count is zero
+
+    if query:  # If there's a query
+        if len(query) == 1:  # Single character query
+            user_list = LoginSignUp.objects.filter(
+                Q(Firstname__iexact=query) | Q(LastName__iexact=query)  # Exact match for single characters
+            )
+        else:  # Multi-character query
+            user_list = LoginSignUp.objects.filter(
+                Q(Firstname__icontains=query) | Q(LastName__icontains=query)  # Partial match for longer queries
+            )
+        user_count = user_list.count()  # Get the count of users
+
+    # Optional: Add pagination
+    from django.core.paginator import Paginator
+    paginator = Paginator(user_list, 10)  # Show 10 users per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'users/user_list.html', {
+        'users': page_obj,
+        'query': query,
+        'user_count': user_count  # Pass the user count to the template
+    })

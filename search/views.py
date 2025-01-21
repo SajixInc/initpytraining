@@ -19,6 +19,7 @@ APP_URL_MAPPING = {
     "manage appointment": "/appointments/manage/<user_id>/<appointmentID>/",
     "reschedule appointment": "/appointments/reschedule/<appointmentID>/",
     "cancel appointment": "/appointments/cancel/<appointmentID>/",
+    "search users":"/user/searchusers/",
 }
 
 def search_apps(request):

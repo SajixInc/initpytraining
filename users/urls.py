@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import CreateUserView, GetUserView, UpdateUserView, DeleteUserView
+from .views import CreateUserView, GetUserView, UpdateUserView, DeleteUserView,search_users
+
+
 
 urlpatterns = [
     # Route for creating a new user
@@ -14,4 +16,5 @@ urlpatterns = [
 
     # Route for deleting a user by ID
     path('delete-user/<int:id>/', DeleteUserView.as_view(), name='delete-user'),
+    path('searchusers/', search_users, name='search-users'),
 ]
