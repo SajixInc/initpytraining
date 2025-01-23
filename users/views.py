@@ -6,11 +6,21 @@ from rest_framework import filters
 from django.db.models import Q
 from .filters import UserFilter
 import logging
+from rest_framework.views import APIView
 from django.shortcuts import render
 from django.template.loader import get_template
 from django.core.paginator import Paginator
 from django.http import HttpResponseBadRequest
 import traceback
+from django.utils.timezone import make_aware
+from datetime import datetime
+from .forms import DateRangeForm
+from django.utils.dateparse import parse_date
+from django.contrib.auth.models import User
+from django.shortcuts import render
+from django.db.models.functions import TruncDate
+from .forms import DateRangeForm
+
 
 
 class CreateUserView(generics.GenericAPIView):
@@ -157,9 +167,7 @@ class DeleteUserView(generics.GenericAPIView):
 
 
 
-from django.db.models import Q
-from django.shortcuts import render
-from .models import LoginSignUp
+
 
 def search_users(request):
     query = request.GET.get('q', '').strip()  # Get the search query
@@ -188,3 +196,35 @@ def search_users(request):
         'query': query,
         'user_count': user_count  # Pass the user count to the template
     })
+
+  # Use your custom user model if applicable
+
+# myapp/views.py
+
+
+
+
+
+
+ # Replace with your actual model name
+
+def registered_users_count_view(request):
+    form = DateRangeForm()
+    user_count = None  # Initialize user_count for rendering the template
+
+    if request.method == 'POST':
+        form = DateRangeForm(request.POST)
+        if form.is_valid():
+            # Extract the validated date range
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+
+            # Filter users by truncating the date_created to only the date part
+            user_count = LoginSignUp.objects.filter(date_created__date__range=(start_date, end_date)).count()
+
+            # Debugging logs
+            print(f"Start Date: {start_date}")
+            print(f"End Date: {end_date}")
+            print(f"User Count: {user_count}")
+
+    return render(request, 'registered_users_count.html', {'form': form, 'user_count': user_count})
