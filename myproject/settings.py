@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'users',
     'appointment_management',
     'search',
-    
+    'django_filters',
+    'users_count',
     
 ]
 
@@ -64,7 +65,7 @@ import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Add this line if not already present
+        'DIRS': [BASE_DIR / "templates"],  # Add the path to your templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,6 +77,8 @@ TEMPLATES = [
         },
     },
 ]
+
+
 
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
@@ -118,7 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
