@@ -23,7 +23,7 @@ urlpatterns = [
     path('appointments/', include('appointment_management.urls')),  # Include URLs for appointments
     path('user/', include('users.urls')),  # Include URLs for users
     path('search/', include('search.urls')),
-
+    path('', include('users_count.urls')),
     
 
     

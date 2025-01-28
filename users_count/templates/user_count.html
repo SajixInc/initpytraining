@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration Aggregated</title>
+</head>
+<body>
+    <h1>User Registration Data</h1>
+
+    <!-- Form for selecting date range and aggregation level -->
+    <form method="post">
+        {% csrf_token %}
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required>
+        
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" required>
+        
+        <label for="level">Aggregation Level:</label>
+        <select id="level" name="level">
+            <option value="day">Day</option>
+            <option value="week">Week</option>
+            <option value="month">Month</option>
+            <option value="year">Year</option>
+        </select>
+        
+        <button type="submit">Search</button>
+    </form>
+
+    <hr>
+
+    <!-- Display error message if present -->
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <!-- Display results if data is present -->
+    {% if data %}
+        <h2>Results:</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in data %}
+                    <tr>
+                        <td>{{ entry.period }}</td>
+                        <td>{{ entry.count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>

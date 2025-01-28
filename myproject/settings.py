@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'appointment_management',
     'search',
     'django_filters',
-    
+    'users_count',
     
 ]
 
